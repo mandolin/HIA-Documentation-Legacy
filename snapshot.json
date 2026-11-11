@@ -1,0 +1,13 @@
+{
+  "repository": "mandolin/HIA-Documentation",
+  "commit": "4e937501a98372b1e41983ccaec2c6b3e1a403ec",
+  "run": 42848664701,
+  "artifact": 13780120566,
+  "tag": "reference-4e93750",
+  "asset": "reference-pages-4e93750.tar.gz",
+  "gzipSha256": "ce9ba8a8b7ede70577be4500b35e64678b3d940b57e72fb70af416d96b91b4a3",
+  "tarSha256": "25055bfd73fd5ac8f5d6376e94f9a53f850d894e5b9acf011a5caaaa546fa00e",
+  "tarBytes": 745328640,
+  "files": 72142,
+  "bytes": 649062152
+}

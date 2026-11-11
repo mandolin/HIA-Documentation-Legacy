@@ -1,0 +1,42 @@
+name: Legacy Reference Pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: legacy-reference-pages
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Download the pinned snapshot
+        run: |
+          tag=$(jq -er .tag snapshot.json)
+          asset=$(jq -er .asset snapshot.json)
+          [[ "$tag" =~ ^reference-[0-9a-f]{7,40}$ && "$asset" =~ ^reference-pages-[0-9a-f]{7,40}\.tar\.gz$ ]]
+          curl --fail --silent --show-error --location --proto '=https' --max-time 120 --output "$RUNNER_TEMP/reference.tar.gz" "https://github.com/mandolin/HIA-Documentation-Legacy/releases/download/$tag/$asset"
+          python3 scripts/prepare.py snapshot.json "$RUNNER_TEMP/reference.tar.gz" "$RUNNER_TEMP/site"
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: ${{ runner.temp }}/site
+
+  deploy:
+    needs: prepare
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
